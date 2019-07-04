@@ -32,6 +32,7 @@ def scraping(urls):
                         with open('test9.csv','a') as f:
                                 writer = csv.writer(f,lineterminator='\n')
                                 writer.writerow(txt)
+        time.sleep(3)
 #get recipesURL
 def getRecipesURL(someOne):
         urls = []
@@ -42,6 +43,7 @@ def getRecipesURL(someOne):
                 someURLs = bs.find_all("a",attrs={"class":"recipe-title font13"})
                 for u in someURLs:
                         urls.append(u.get('href'))
+                time.sleep(3)
         return urls
 #get pagingURL
 def getpagingURL(someOne):
@@ -91,7 +93,6 @@ def print_list(some):
                         print("例外です",type(some))
                 
 
-
 if __name__ == "__main__":
         searchWords = [
                 '/search/鶏肉'
@@ -104,4 +105,4 @@ if __name__ == "__main__":
         pagingURLs = getpagingURL(searchWords)
         URLS = getRecipesURL(pagingURLs)
         #scraping(recipes)
-        # print_list(URLS)
+        

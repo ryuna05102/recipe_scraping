@@ -8,8 +8,8 @@ from bs4 import BeautifulSoup as bs4
 #get information
 def scraping(urls):
         #scraping url
-        Date=[]
-        space = "\n\n"
+        
+        space = "\n"
         for search in urls:
                 url = cookpad+search
                 response = requests.get(url)
@@ -20,19 +20,17 @@ def scraping(urls):
                 #
                 someRecipe = bs.find_all("div",attrs={'id':'recipe'})
                 for someRecipes in someRecipe:
+                        Date=[]
                         Date.extend([
-                                someRecipes.select('#recipe-title')[0].text,
-                                someRecipes.select('.description_text')[0].text,
-                                someRecipes.select('#ingredients_list')[0].text,
-                                someRecipes.select('#steps')[0].text,
-                                someRecipes.select('#advice')[0].text
+                                someRecipes.select('#recipe-title')[0].text+space,
+                                # someRecipes.select('.description_text')[0].text+space,
+                                someRecipes.select('#ingredients_list')[0].text+space,
+                                someRecipes.select('#steps')[0].text+space,
+                                # someRecipes.select('#advice')[0].text
                         ])
                         time.sleep(3)
                         txt = [rmTag(Date)+space,''] 
-                        with open('test9.csv','a') as f:
-                                writer = csv.writer(f,lineterminator='\n')
-                                writer.writerow(txt)
-        time.sleep(3)
+                        writeCSV(txt)
 #get recipesURL
 def getRecipesURL(someOne):
         urls = []
@@ -43,7 +41,7 @@ def getRecipesURL(someOne):
                 someURLs = bs.find_all("a",attrs={"class":"recipe-title font13"})
                 for u in someURLs:
                         urls.append(u.get('href'))
-                time.sleep(3)
+                time.sleep(2)
         return urls
 #get pagingURL
 def getpagingURL(someOne):
@@ -55,17 +53,14 @@ def getpagingURL(someOne):
 
                 paging   = bs.find_all("div",attrs={"class":"center paginate"})
                 for p in paging:
-                        page.append(p.select('a:nth-child(1)'))
                         page.append(p.select('a:nth-child(2)'))
                         page.append(p.select('a:nth-child(3)'))
                         page.append(p.select('a:nth-child(4)'))
                         page.append(p.select('a:nth-child(5)'))
-
-                page [1]= str(page[1])[10:65]
-                page [2]= str(page[2])[10:65]
-                page [3]= str(page[3])[10:65]
-                page [4]= str(page[4])[10:65]
-                page [0]= str(page[1]).replace("page=2","page=1")
+        i = 0
+        for pa in page:
+                 page[i]= str(pa)[10:65]
+                 i+=1
         return page
 #remove tag 
 def rmTag(someRecipe):
@@ -75,15 +70,20 @@ def rmTag(someRecipe):
                 lines = line.splitlines()#indention --> '' 
                 text+="\n".join(line for line in lines if line) #remove ''
         return text
+#write recipes to csv
+def writeCSV(txt):
+        with open('recipestest.csv','a') as f:
+                writer = csv.writer(f,lineterminator='\n')
+                writer.writerow(txt)
 #list print_all
 def print_list(some):
         if type(some) == list:
-                print("print start \n")
+                print("print start list \n")
                 for p in some:
                   print(p)
                 return
         if type(some) == str:
-                print("print start \n")
+                print("print start str \n")
                 print(some)
                 return
         else :
@@ -96,13 +96,13 @@ def print_list(some):
 if __name__ == "__main__":
         searchWords = [
                 '/search/鶏肉'
-                #,'/search/豚肉'
-                #,'/search/牛肉'
-                #,'/search/パスタ'
-                #,'/search/うどん'
+                ,'/search/豚肉'
+                ,'/search/牛肉'
+                ,'/search/パスタ'
+                ,'/search/うどん'
         ]
         cookpad = 'https://cookpad.com'
         pagingURLs = getpagingURL(searchWords)
         URLS = getRecipesURL(pagingURLs)
-        #scraping(recipes)
+        scraping(URLS)
         

@@ -5,6 +5,8 @@ import pandas as ps
 import csv
 import time
 from bs4 import BeautifulSoup as bs4
+
+
 #get information
 def scraping(urls):
         #scraping url
@@ -28,9 +30,10 @@ def scraping(urls):
                                 someRecipes.select('#steps')[0].text+space,
                                 # someRecipes.select('#advice')[0].text
                         ])
-                        time.sleep(3)
+                        time.sleep(2)
                         txt = [rmTag(Date)+space,''] 
                         writeCSV(txt)
+        # print_list(Date)
 #get recipesURL
 def getRecipesURL(someOne):
         urls = []
@@ -68,11 +71,11 @@ def rmTag(someRecipe):
         for line in someRecipe:
                 line.strip() ##\n --> indention
                 lines = line.splitlines()#indention --> '' 
-                text+="\n".join(line for line in lines if line) #remove ''
+                text=  text+ "\n" + "\n".join(line for line in lines if line) #remove ''
         return text
 #write recipes to csv
 def writeCSV(txt):
-        with open('recipestest.csv','a') as f:
+        with open('recipeDate.csv','a') as f:
                 writer = csv.writer(f,lineterminator='\n')
                 writer.writerow(txt)
 #list print_all

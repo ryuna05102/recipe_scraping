@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup as bs4
 #get information
 def scraping(urls):
         #scraping url
-        
+
         space = "\n"
         for search in urls:
                 url = cookpad+search
